@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/s
+
+# Docker
+docker-compose.override.yml
+docker-compose.local.yml
+.dockerignore
+
+# IDE / Editor specific
+.ide/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+*.tmp
+
+# Build artifacts
+dist/
+build/
+*.egg
+
+# others
+project_print.md
+agent_logs/
+saved_runs/*.csv
+saved_runs/default_user/
+analytics_report/
+config.tmp
