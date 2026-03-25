@@ -8,7 +8,7 @@ from api.models import ProcessResponse, AccessibilityReport, WCAGLevel
 
 router = APIRouter()
 
-ALLOWED_TYPES = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
+ALLOWED_TYPES = ["application/pdf"]
 MAX_FILE_SIZE_MB = 100
 
 

@@ -25,47 +25,59 @@ git clone https://github.com/Glutarios66/AutotaggingOpenSource.git
 cd AutotaggingOpenSource
 ```
 
-### 2. Create and activate a virtual environment
+### 2. Setup and Installation
 
-```bash
-python -m venv venv
-```
+The project is designed to run within a Docker environment, simplifying dependency management.
 
-Windows:
-```bash
-venv\Scripts\activate
-```
+### Prerequisites
 
-Mac / Linux:
-```bash
-source venv/bin/activate
-```
+  * **Docker & Docker Compose:** You must have Docker and Docker Compose (or the `docker compose` plugin) installed. The `setup.sh` script can install this on Debian-based systems.
+  * **Python 3.11+:** Required for running the management scripts on your local machine. The `setup.sh` script can install a compatible version.
+  * **Bash Shell:** Required for the setup script.
 
-You will know the environment is active when `(venv)` appears at the beginning of your terminal prompt.
+### Automated Setup (`setup.sh`)
 
-### 3. Install dependencies
+The `setup.sh` script is designed for **Debian-based systems (like Ubuntu)** and automates the entire setup process.
 
-```bash
-pip install -r requirements.txt
-```
+**Warning:** This script requires `sudo` privileges to install system packages like Python, Git, and Docker, and it will add the current user to the `docker` group. Please review the script before running it.
 
-### 4. Set up environment variables
+1.  **Make the script executable:**
+    ```bash
+    chmod +x setup.sh
+    ```
+2.  **Run with sudo:**
+    ```bash
+    sudo ./setup.sh
+    ```
+3.  **Log Out and Log Back In:** For the `docker` group changes to take effect, you must log out of your system and log back in. Alternatively, you can run `newgrp docker` in your terminal.
 
-Copy the example configuration:
+### Manual Setup
 
-```bash
-cp .env.example .env
-```
+If you are not on a Debian-based system or prefer a manual setup:
 
-Open the `.env` file and add your API key:
+1.  **Install Docker and Docker Compose:** Follow the official installation guide for your operating system.
+2.  **Install Python 3.11+:** Install a compatible Python version.
+3.  **Create a Virtual Environment:**
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
+4.  **Install Dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-```
-ANTHROPIC_API_KEY=your_key_here
-```
+### Configuration
 
-The `.env` file is excluded from Git and stays local on your machine.
+Before running the simulation, you must provide your AI API key.
 
----
+1.  **Create the `.env` file:** In the project root, create a file named `.env`.
+2.  **Add your API key:** Add the following line to the `.env` file, replacing the placeholder with your actual key:
+    ```
+    AI_API_KEY='YOUR_AI_API_KEY'
+    ```
+
+-----
 
 ## Starting the server
 
@@ -146,7 +158,7 @@ Expected response:
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `file` | file | — | PDF or DOCX document (max. 100 MB) |
+| `file` | file | — | PDF (max. 100 MB) |
 | `generate_report` | boolean | `false` | Generates a detailed WCAG audit report |
 | `shift_headings` | boolean | `false` | Shifts all headings one level down (H1→H2, H2→H3, etc.) |
 | `wcag_level` | string | `AA` | Conformance level to check against: `A`, `AA`, or `AAA` |
