@@ -17,7 +17,7 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: shared_agent_db
+      POSTGRES_DB: file_saver
     volumes:
       - postgres_data:/var/lib/postgresql/data
       # This automatically runs our schema file on database creation.
