@@ -14,3 +14,8 @@ anthropic==0.28.0
 
 # Phase 4 - WCAG / Output
 openpyxl==3.1.2
+
+# AI model
+paddlepaddle==3.0.0
+paddlex==3.0.0rc1
+paddlex[ocr]==3.0.0rc1

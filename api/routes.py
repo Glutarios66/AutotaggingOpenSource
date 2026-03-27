@@ -6,7 +6,7 @@ import os
 from api.models import ProcessResponse, AccessibilityReport
 from parser.document import parse_document
 import uuid
-from renderer.document import highlight_elements
+
 from fastapi.responses import FileResponse
 from fastapi import BackgroundTasks
 from core.job_store import create_job, complete_job, fail_job
@@ -41,7 +41,7 @@ async def process_document(
         generate_report,
         shift_headings
     )
-
+    unified_doc = parse_document(content, file.filename, file.content_type)
     return {
         "job_id": job_id,
         "status": "processing",
@@ -50,8 +50,14 @@ async def process_document(
             "shift_headings": shift_headings
         },
         "status_url": f"/status/{job_id}",
-        "download_url": f"/download/{job_id}"
+        "download_url": f"/download/{job_id}",
+        "Heading": f"{unified_doc.heading_count}",
+        "Paragraphs": f"{unified_doc.paragraph_count}",
+        "Images": f"{unified_doc.image_count}",
+        "Tables": f"{unified_doc.table_count}"
     }
+
+
 
 """
 @router.post("/process", response_model=ProcessResponse)
@@ -142,7 +148,6 @@ def process_file(
 ):
     import os
     from parser.document import parse_document
-    from renderer.document import highlight_elements
 
     try:
         unified_doc = parse_document(content, filename, content_type)
@@ -157,6 +162,10 @@ def process_file(
         os.makedirs(output_dir, exist_ok=True)
 
         output_path = f"{output_dir}/{output_filename}"
+
+        # 👇 HIER wird die Datei erzeugt (einfach Kopie)
+        with open(output_path, "wb") as f:
+            f.write(content)
 
         complete_job(job_id, output_path, output_filename)
 

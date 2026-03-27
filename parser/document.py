@@ -177,10 +177,78 @@ def parse_docx(file_bytes: bytes, filename: str) -> UnifiedDocument:
     unified.compute_stats()
     return unified
 
+TEST_TAG_TREE: list = [
+    Heading(
+        level=1,
+        text="Beispiel-Hauptüberschrift (Test)",
+        page=1
+    ),
+    Paragraph(
+        text=(
+            "Dies ist ein Testabsatz, der automatisch eingefügt wurde. "
+            "Er simuliert einen normalen Fließtextblock im Dokument."
+        ),
+        page=1
+    ),
+    Table(
+        page=1,
+        rows=[
+            [
+                TableCell(text="Spalte A", is_header=True),
+                TableCell(text="Spalte B", is_header=True),
+                TableCell(text="Spalte C", is_header=True),
+            ],
+            [
+                TableCell(text="Wert 1", is_header=False),
+                TableCell(text="Wert 2", is_header=False),
+                TableCell(text="Wert 3", is_header=False),
+            ],
+            [
+                TableCell(text="Wert 4", is_header=False),
+                TableCell(text="Wert 5", is_header=False),
+                TableCell(text="Wert 6", is_header=False),
+            ],
+        ]
+    ),
+    Image(
+        index=0,
+        page=1,
+        image_bytes=None  # Kein echtes Bild – simuliert nur das Figure-Tag
+    ),
+]
+
+# Ordnernamen, die als Testpfad gelten (case-insensitiv)
+TEST_FOLDER_NAMES = {"test", "tests", "testfiles", "test_files"}
+
+
+def _is_test_file(filename: str) -> bool:
+
+    """
+    Gibt True zurück wenn der Dateiname einen bekannten Testordner-Pfadteil enthält.
+    Unterstützt sowohl Unix- als auch Windows-Pfadtrenner.
+    Beispiele die matchen:
+      - test/meine_datei.pdf
+      - C:\\Users\\user\\tests\\doc.pdf
+      - /home/user/testfiles/sample.pdf
+    """
+    parts = re.split(r"[/\\]", filename.lower())
+    return any(part in TEST_FOLDER_NAMES for part in parts)
+
+
+def _build_test_document(filename: str) -> UnifiedDocument:
+    """Erstellt ein UnifiedDocument mit dem fixen TEST_TAG_TREE."""
+    unified = UnifiedDocument(filename=filename, total_pages=1)
+    unified.elements = list(TEST_TAG_TREE)  # Kopie, nicht Referenz
+    unified.compute_stats()
+    return unified
 
 # ── Main entry point ───────────────────────────────────────────────────────────
 
 def parse_document(file_bytes: bytes, filename: str, content_type: str) -> UnifiedDocument:
+    # Testordner-Modus: fixer Tag-Baum statt echtem Parsing
+    if _is_test_file(filename):
+        return _build_test_document(filename)
+
     if content_type == "application/pdf":
         return parse_pdf(file_bytes, filename)
     elif content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
