@@ -1,4 +1,4 @@
-# Accessify
+# AutotaggingOpenSource
 
 An open-source API for automatic accessibility enhancement of documents using Generative AI.
 
@@ -186,7 +186,7 @@ Expected response:
 ## Project structure
 
 ```
-accessify/
+autotagginopensource/
 ├── main.py                  # Entry point, FastAPI app
 ├── requirements.txt         # Python dependencies
 ├── .env                     # API keys (not committed to Git)

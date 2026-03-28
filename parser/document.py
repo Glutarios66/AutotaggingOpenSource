@@ -255,3 +255,26 @@ def parse_document(file_bytes: bytes, filename: str, content_type: str) -> Unifi
         return parse_docx(file_bytes, filename)
     else:
         raise ValueError(f"Unsupported file type: {content_type}")
+
+if __name__ == "__main__":
+        import json
+        import sys
+
+        filepath = sys.argv[1]  # python parser/document.py meine_datei.pdf
+
+        with open(filepath, "rb") as f:
+            content = f.read()
+
+        doc = parse_pdf(content, filepath)
+
+        for el in doc.elements:
+            if hasattr(el, "level"):
+                print(f"[Page {el.page}] HEADING H{el.level}: {el.text}")
+            elif hasattr(el, "rows"):
+                print(f"[Page {el.page}] TABLE: {len(el.rows)} rows x {len(el.rows[0])} cols")
+            elif hasattr(el, "alt_text"):
+                print(f"[Page {el.page}] IMAGE #{el.index}")
+            elif hasattr(el, "items"):
+                print(f"[Page {el.page}] LIST: {el.items[0].text[:60]}")
+            else:
+                print(f"[Page {el.page}] PARAGRAPH: {el.text[:80]}")

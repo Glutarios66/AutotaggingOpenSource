@@ -1,7 +1,7 @@
 # Note: Create a .env file in the root directory with the following content:
 # AI_API_KEY='your_api_key_here'
 
-# core/config.py
+# services/config.py
 
 # --- Debug Mode Configuration ---
 DEBUG_MODE = {
